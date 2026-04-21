@@ -1,71 +1,70 @@
-# OpenClaw Diagnosis Skill
+# OpenClaw 远程诊断 Skill
 
-Claude Code skill for diagnosing and repairing remote [OpenClaw](https://github.com/nicepkg/openclaw) instances via SSH.
+通过 SSH 连接远程 [OpenClaw](https://github.com/nicepkg/openclaw) 实例，执行标准化诊断流程，自动识别并修复常见问题。适用于 Claude Code。
 
-## Features
+## 功能
 
-- **Single-machine deep diagnosis** — 6-phase inspection: connectivity, service status, error log analysis, model/auth checks, channel/session config, daily-memory & cron health
-- **Bulk fleet inspection** — one-command health check across all managed instances with structured report output
-- **Auto-repair** — fixes common issues automatically: session bloat, missing configs, stale lock files, tools conflicts, version upgrades
-- **Daily-memory dual-safeguard audit** — verifies both hook-driven and prompt-driven memory generation mechanisms
+- **单机深度诊断** — 6 阶段检查：连通性、服务状态、错误日志分析、模型/授权、频道/会话配置、Daily-Memory 与 Cron 健康
+- **批量巡检** — 一条命令检查所有托管实例，输出结构化巡检报告
+- **自动修复** — 自动修复常见问题：Session 膨胀、配置缺失、陈旧锁文件、工具冲突、版本升级等
+- **Daily-Memory 双保险审计** — 同时验证 Hook 驱动和提示词驱动两种记忆生成机制
 
-## Managed Instances
+## 托管实例
 
-| Name | Tailscale IP | Notes |
-|------|-------------|-------|
+| 名称 | Tailscale IP | 备注 |
+|------|-------------|------|
 | zhangjiabo | 100.124.248.95 | |
-| yuchao | 100.107.214.102 | gateway may run from terminal |
+| yuchao | 100.107.214.102 | Gateway 可能从终端启动 |
 | zhangyang | 100.67.1.75 | |
 | danni | 100.99.28.33 | |
 | liucongying | 100.75.6.48 | |
-| kai | 100.67.177.68 | SSH sometimes unreachable |
-| guoyaya | 100.112.34.65 | multi-user active instance |
+| kai | 100.67.177.68 | SSH 偶尔不可达 |
+| guoyaya | 100.112.34.65 | 多用户活跃实例 |
 
-## Diagnosis Phases
+## 诊断阶段
 
-1. **Connectivity** — ping, SSH port, Gateway port
-2. **Service Status** — version, gateway process, launchctl state
-3. **Error Log Analysis** — pattern matching against 20+ known error signatures with severity levels
-4. **Model & Auth** — API key validity, OAuth token expiration
-5. **Channel & Session Config** — dmScope, session reset, contextTokens, fallbacks, tools allowlist
-6. **Daily-Memory & Cron** — memory continuity, hook config, AGENTS.md prompts, cron errors
+1. **连通性检查** — ping、SSH 端口、Gateway 端口
+2. **服务状态** — 版本、Gateway 进程、launchctl 状态
+3. **错误日志分析** — 匹配 20+ 已知错误模式，按严重程度分级
+4. **模型与授权** — API Key 有效性、OAuth Token 过期检测
+5. **频道与 Session 配置** — dmScope、session reset、contextTokens、fallbacks、工具白名单
+6. **Daily-Memory 与 Cron** — 记忆连续性、Hook 配置、AGENTS.md 提示词、Cron 错误
 
-## Auto-Repair Capabilities
+## 自动修复能力
 
-| Issue | Auto-fixable |
-|-------|-------------|
-| Session file bloat (>2MB) | Yes |
-| Missing contextTokens | Yes |
-| Daily-memory hook not enabled | Yes |
-| Session dmScope not set | Yes |
-| tools.allow / alsoAllow conflict | Yes |
-| Feishu tool names mismatch | Yes |
-| Stale session lock files | Yes |
-| Version upgrade | Yes |
-| OAuth token expired | No (requires browser) |
-| iCloud sync corruption | No (requires local access) |
+| 问题 | 可自动修复 |
+|------|-----------|
+| Session 文件膨胀（>2MB） | 是 |
+| 缺少 contextTokens 配置 | 是 |
+| Daily-Memory Hook 未启用 | 是 |
+| Session dmScope 未设置 | 是 |
+| tools.allow / alsoAllow 冲突 | 是 |
+| 飞书工具名不匹配 | 是 |
+| 陈旧会话锁文件 | 是 |
+| 版本升级 | 是 |
+| OAuth Token 过期 | 否（需浏览器交互） |
+| iCloud 同步导致数据损坏 | 否（需本地操作） |
 
-## Usage
+## 使用方法
 
-Install as a Claude Code skill:
+安装为 Claude Code skill：
 
 ```bash
-# Clone into Claude Code skills directory
 git clone https://github.com/jarbozhang/openclaw-diagnosis.git ~/.claude/skills/openclaw-diagnosis
 ```
 
-Then trigger in Claude Code by saying:
+在 Claude Code 中通过以下方式触发：
 
 - "诊断 openclaw" / "openclaw 挂了"
 - "巡检" / "巡检所有机器"
 - "看看 guoyaya 的 openclaw"
-- Any machine name + service issue context
+- 提到机器名 + 服务问题相关上下文
 
-## Requirements
+## 前置条件
 
-- Claude Code with SSH access to target machines via Tailscale
-- `sshpass` installed locally
-- SSH credentials stored in Claude Code memory (`openclaw_ssh_usernames.md`)
+- Claude Code，且可通过 Tailscale 网络 SSH 访问目标机器
+- 本地已安装 `sshpass`
+- SSH 凭据存储在 Claude Code memory 中（`openclaw_ssh_usernames.md`）
 
 ## License
 
